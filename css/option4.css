@@ -273,54 +273,12 @@ body.page-product {
   transform: scale(0.98);
 }
 
-/* === PACK CTA SECTION (inserted below product info) === */
-.pack-cta-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 32px 48px;
-}
-
-@media (max-width: 768px) {
-  .pack-cta-section {
-    padding: 24px 16px 32px;
-  }
-}
-
-.pack-cta-section__header {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.pack-cta-section__badge {
-  display: inline-block;
-  background: #ff6b00;
-  color: #fff;
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 10px;
-}
-
-.pack-cta-section__title {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #1a1a1a;
-  margin-bottom: 6px;
-}
-
-.pack-cta-section__subtitle {
-  font-size: 0.9rem;
-  color: #888;
-}
-
-/* Pack CTA cards (horizontal row) */
+/* Pack CTA cards (horizontal row, integrated in product-info) */
 .pack-cta-cards {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
+  margin: 24px 0;
 }
 
 @media (min-width: 640px) {
