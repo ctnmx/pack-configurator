@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Packs Randonnée — Offre spéciale</title>
+  <title>Packs Randonnée — Comparatif</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/option3.css" />
 </head>
 <body>
 
@@ -13,9 +14,9 @@
   <nav class="options-nav" aria-label="Options d'affichage">
     <div class="options-nav__inner">
       <span class="options-nav__label">Aperçu UX :</span>
-      <a href="index.html" class="options-nav__link is-active">Option 1 — Drawer</a>
+      <a href="index.html" class="options-nav__link">Option 1 — Drawer</a>
       <a href="option2.html" class="options-nav__link">Option 2 — Builder</a>
-      <a href="option3.html" class="options-nav__link">Option 3 — Tableau</a>
+      <a href="option3.html" class="options-nav__link is-active">Option 3 — Tableau</a>
     </div>
   </nav>
 
@@ -27,17 +28,16 @@
 
   <!-- HERO -->
   <section class="hero">
-    <h1 class="hero__title">Nos Packs Randonnée</h1>
+    <h1 class="hero__title">Comparez nos packs</h1>
     <p class="hero__subtitle">
-      Combinez guides Zoom et Coffrets pour préparer vos prochaines aventures.
-      Plus vous composez, plus vous économisez !
+      Tous nos packs côte à côte. Configurez et commandez directement.
     </p>
   </section>
 
-  <!-- OFFER CARDS -->
-  <section id="offer-cards" class="offer-cards" aria-label="Offres disponibles">
+  <!-- PRICING TABLE -->
+  <div class="pricing-table" id="pricing-table" aria-label="Tableau comparatif des packs">
     <!-- Rendered by JS -->
-  </section>
+  </div>
 
   <!-- SHIPPING INFO -->
   <section class="shipping-info" aria-label="Informations de livraison">
@@ -61,41 +61,12 @@
     </div>
   </section>
 
-  <!-- PAGE MODE CONFIGURATOR (hidden by default) -->
-  <section id="page-configurator" class="page-configurator" aria-label="Configurateur">
-    <button id="page-config-back" class="page-configurator__back" aria-label="Retour aux offres">
-      &larr; Retour aux offres
-    </button>
-    <h2 id="page-config-title" class="hero__title" style="text-align:left;font-size:1.5rem;margin-bottom:20px;"></h2>
-    <div id="page-config-body">
-      <!-- Rendered by JS -->
-    </div>
-  </section>
-
-  <!-- MOCK CART (dev display) -->
-  <section id="mock-cart" class="mock-cart" aria-label="Panier de test">
-    <!-- Rendered by JS in mock mode -->
-  </section>
-
-  <!-- DRAWER OVERLAY -->
-  <div id="drawer-overlay" class="drawer-overlay" aria-hidden="true"></div>
-
-  <!-- DRAWER -->
-  <aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-label="Configurateur de pack">
-    <div class="drawer__header">
-      <h2 id="drawer-title" class="drawer__title"></h2>
-      <button id="drawer-close" class="drawer__close" aria-label="Fermer">✕</button>
-    </div>
-    <div id="drawer-body" class="drawer__body">
-      <!-- Rendered by JS -->
-    </div>
-  </aside>
+  <!-- MOCK CART -->
+  <section id="mock-cart" class="mock-cart" aria-label="Panier de test"></section>
 
   <!-- TOAST -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <!-- APP SCRIPT -->
-  <script type="module" src="js/app.js"></script>
-
+  <script type="module" src="js/app-option3.js"></script>
 </body>
 </html>

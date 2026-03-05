@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packs Randonnée — Builder tout-en-un</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/option2.css" />
+</head>
+<body>
+
+  <!-- SHARED NAV -->
+  <nav class="options-nav" aria-label="Options d'affichage">
+    <div class="options-nav__inner">
+      <span class="options-nav__label">Aperçu UX :</span>
+      <a href="index.html" class="options-nav__link">Option 1 — Drawer</a>
+      <a href="option2.html" class="options-nav__link is-active">Option 2 — Builder</a>
+      <a href="option3.html" class="options-nav__link">Option 3 — Tableau</a>
+    </div>
+  </nav>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner" role="banner">
+    <span class="promo-banner__tag">Offre limitée</span>
+    Composez votre pack randonnée à prix réduit
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero__title">Composez votre pack</h1>
+    <p class="hero__subtitle">
+      Choisissez une formule, sélectionnez vos produits, et ajoutez au panier. Tout est là.
+    </p>
+  </section>
+
+  <!-- PACK TYPE TABS -->
+  <div class="builder-tabs" role="tablist" aria-label="Type de pack">
+    <!-- Rendered by JS -->
+  </div>
+
+  <!-- BUILDER CONTENT AREA -->
+  <div class="builder-content" id="builder-content">
+    <!-- ZOOM SECTION -->
+    <section class="builder-section" id="builder-zoom-section">
+      <h2 class="builder-section__title">Choisissez votre Zoom</h2>
+      <p class="builder-section__hint">1 guide à sélectionner</p>
+      <div class="product-grid" id="builder-zoom-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- COFFRET SECTION -->
+    <section class="builder-section" id="builder-coffret-section">
+      <h2 class="builder-section__title">Choisissez votre Coffret</h2>
+      <p class="builder-section__hint">1 coffret à sélectionner</p>
+      <div class="product-grid" id="builder-coffret-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- INLINE RECAP -->
+    <section class="builder-recap is-hidden" id="builder-recap">
+      <!-- Rendered by JS -->
+    </section>
+  </div>
+
+  <!-- STICKY BOTTOM BAR -->
+  <div class="builder-bottom-bar" id="builder-bottom-bar">
+    <div class="builder-bottom-bar__inner">
+      <div class="builder-bottom-bar__info">
+        <span class="builder-bottom-bar__pack-name" id="bar-pack-name">—</span>
+        <span class="builder-bottom-bar__original" id="bar-original" style="display:none"></span>
+        <span class="builder-bottom-bar__price" id="bar-price">—</span>
+        <span class="builder-bottom-bar__shipping" id="bar-shipping"></span>
+      </div>
+      <button class="btn btn--primary builder-bottom-bar__cta" id="builder-add-to-cart" disabled>
+        Ajouter au panier
+      </button>
+    </div>
+  </div>
+
+  <!-- MOCK CART -->
+  <section id="mock-cart" class="mock-cart" aria-label="Panier de test"></section>
+
+  <!-- TOAST -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script type="module" src="js/app-option2.js"></script>
+</body>
+</html>
