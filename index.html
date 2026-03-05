@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packs Randonnée — Offre spéciale</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- PROMO BANNER -->
+  <div class="promo-banner" role="banner">
+    <span class="promo-banner__tag">Offre limitée</span>
+    Composez votre pack randonnée à prix réduit
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero__title">Nos Packs Randonnée</h1>
+    <p class="hero__subtitle">
+      Combinez guides Zoom et Coffrets pour préparer vos prochaines aventures.
+      Plus vous composez, plus vous économisez !
+    </p>
+  </section>
+
+  <!-- OFFER CARDS -->
+  <section id="offer-cards" class="offer-cards" aria-label="Offres disponibles">
+    <!-- Rendered by JS -->
+  </section>
+
+  <!-- SHIPPING INFO -->
+  <section class="shipping-info" aria-label="Informations de livraison">
+    <div class="shipping-info__inner">
+      <span class="shipping-info__item">
+        <span class="shipping-info__icon" aria-hidden="true">📦</span>
+        <span>&lt;&nbsp;28&nbsp;€ → 3,90&nbsp;€</span>
+      </span>
+      <span class="shipping-info__item">
+        <span class="shipping-info__icon" aria-hidden="true">📦</span>
+        <span>28–54&nbsp;€ → 2,90&nbsp;€</span>
+      </span>
+      <span class="shipping-info__item">
+        <span class="shipping-info__icon" aria-hidden="true">📦</span>
+        <span>55–74&nbsp;€ → 1,90&nbsp;€</span>
+      </span>
+      <span class="shipping-info__item shipping-info__highlight">
+        <span class="shipping-info__icon" aria-hidden="true">🎉</span>
+        <span>75&nbsp;€+ → livraison gratuite</span>
+      </span>
+    </div>
+  </section>
+
+  <!-- PAGE MODE CONFIGURATOR (hidden by default) -->
+  <section id="page-configurator" class="page-configurator" aria-label="Configurateur">
+    <button id="page-config-back" class="page-configurator__back" aria-label="Retour aux offres">
+      &larr; Retour aux offres
+    </button>
+    <h2 id="page-config-title" class="hero__title" style="text-align:left;font-size:1.5rem;margin-bottom:20px;"></h2>
+    <div id="page-config-body">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- MOCK CART (dev display) -->
+  <section id="mock-cart" class="mock-cart" aria-label="Panier de test">
+    <!-- Rendered by JS in mock mode -->
+  </section>
+
+  <!-- DRAWER OVERLAY -->
+  <div id="drawer-overlay" class="drawer-overlay" aria-hidden="true"></div>
+
+  <!-- DRAWER -->
+  <aside id="drawer" class="drawer" role="dialog" aria-modal="true" aria-label="Configurateur de pack">
+    <div class="drawer__header">
+      <h2 id="drawer-title" class="drawer__title"></h2>
+      <button id="drawer-close" class="drawer__close" aria-label="Fermer">✕</button>
+    </div>
+    <div id="drawer-body" class="drawer__body">
+      <!-- Rendered by JS -->
+    </div>
+  </aside>
+
+  <!-- TOAST -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- APP SCRIPT -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>
