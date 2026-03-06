@@ -77,46 +77,106 @@
       </p>
 
       <ul class="product-info__features">
-        <li>100 itinéraires testés et approuvés (de 2 à 25 jours)</li>
-        <li>Pour tous les niveaux (débutant à expert)</li>
-        <li>100% accessibles en transport (sans avion ni voiture)</li>
-        <li>En vélo de route, ou vélo gravel</li>
-        <li>Le tracé GPS de chaque itinéraire</li>
+        <li>100 itinéraires testés et validés par des cyclistes</li>
+        <li>De 2 à 25 jours — du week-end express au grand voyage</li>
+        <li>Tous niveaux : débutant, intermédiaire, expert</li>
+        <li>100% accessible en train — zéro voiture, zéro avion</li>
+        <li>Tracés GPS téléchargeables inclus</li>
       </ul>
 
       <div class="product-info__price">40,00 €</div>
 
       <p class="product-info__shipping-promo">
-        <span class="emoji">🎁</span> Promo : Livraison à 2,90€ au lieu de 6,90 €
+        🚚 Livraison dès 1,90 € · Gratuite dès 75 €
       </p>
 
-      <div id="pack-cta-cards" class="pack-cta-cards">
-        <!-- Rendered by JS -->
-      </div>
+      <!-- INLINE PACK CONFIGURATOR -->
+      <div id="pack-configurator-inline" class="pack-inline">
+        <h3 class="pack-inline__heading">Choisissez votre formule</h3>
 
-      <button class="product-info__cta">Commander</button>
+        <!-- Tab selector: 3 radio-style cards -->
+        <div id="pack-tabs" class="pack-tabs" role="radiogroup" aria-label="Formule">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Inline product selection area -->
+        <div id="pack-selection" class="pack-selection">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Inline recap -->
+        <div id="pack-recap-inline" class="pack-recap-inline">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Primary CTA -->
+        <button id="pack-add-to-cart" class="pack-inline__cta" disabled>
+          Ajouter au panier
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- USP BAR -->
   <div class="usp-bar">
     <div class="usp-bar__item">
-      <span class="usp-bar__icon">💬</span>
+      <span class="usp-bar__icon-text">SAV</span>
       <span class="usp-bar__text">Service client<br>réactif</span>
     </div>
     <div class="usp-bar__item">
-      <span class="usp-bar__icon">🧗</span>
+      <span class="usp-bar__icon-text">PRO</span>
       <span class="usp-bar__text">Testés par des<br>aventuriers</span>
     </div>
     <div class="usp-bar__item">
-      <span class="usp-bar__icon">🏆</span>
-      <span class="usp-bar__text">+10 000 clients<br>satisfaits</span>
+      <span class="usp-bar__icon-text">10K+</span>
+      <span class="usp-bar__text">Clients<br>satisfaits</span>
     </div>
     <div class="usp-bar__item">
-      <span class="usp-bar__icon">📦</span>
-      <span class="usp-bar__text">Expédition<br>sous 48h</span>
+      <span class="usp-bar__icon-text">48h</span>
+      <span class="usp-bar__text">Expédition<br>rapide</span>
     </div>
   </div>
+
+  <!-- SOCIAL PROOF -->
+  <section class="social-proof" aria-label="Avis clients">
+    <div class="social-proof__inner">
+      <h2 class="social-proof__title">Ils nous font confiance</h2>
+      <div class="social-proof__stat">
+        <span class="social-proof__number">10 000+</span>
+        <span class="social-proof__label">aventuriers équipés</span>
+      </div>
+      <div id="social-proof-reviews" class="social-proof__reviews">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- RISK REVERSAL -->
+  <section class="risk-reversal" aria-label="Garanties">
+    <div class="risk-reversal__inner">
+      <div class="risk-reversal__item">
+        <div class="risk-reversal__badge">30j</div>
+        <div class="risk-reversal__text">
+          <strong>Satisfait ou remboursé</strong>
+          <span>Retour gratuit sous 30 jours</span>
+        </div>
+      </div>
+      <div class="risk-reversal__item">
+        <div class="risk-reversal__badge">SSL</div>
+        <div class="risk-reversal__text">
+          <strong>Paiement sécurisé</strong>
+          <span>CB, PayPal, Apple Pay</span>
+        </div>
+      </div>
+      <div class="risk-reversal__item">
+        <div class="risk-reversal__badge">FR</div>
+        <div class="risk-reversal__text">
+          <strong>Fabriqué en France</strong>
+          <span>Conception et impression locales</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- DIVIDER -->
   <div class="section-divider"><hr class="section-divider__line" /></div>
@@ -124,20 +184,21 @@
   <!-- MOCK CART -->
   <section id="mock-cart" class="mock-cart" aria-label="Panier de test"></section>
 
-  <!-- MODAL -->
-  <div id="rv-modal-overlay" class="rv-modal-overlay" aria-hidden="true">
-    <div id="rv-modal" class="rv-modal" role="dialog" aria-modal="true" aria-label="Configurateur de pack">
-      <div class="rv-modal__header">
-        <h2 id="rv-modal-title" class="rv-modal__title"></h2>
-        <button id="rv-modal-close" class="rv-modal__close" aria-label="Fermer">✕</button>
-      </div>
-      <div id="rv-modal-body" class="rv-modal__body"></div>
-      <div id="rv-modal-footer" class="rv-modal__footer"></div>
-    </div>
-  </div>
-
   <!-- TOAST -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- STICKY CTA BAR -->
+  <div id="sticky-cta-bar" class="sticky-cta" aria-hidden="true">
+    <div class="sticky-cta__inner">
+      <div class="sticky-cta__info">
+        <span id="sticky-cta-title" class="sticky-cta__title">Pack Explorer</span>
+        <span id="sticky-cta-price" class="sticky-cta__price">68,00 €</span>
+      </div>
+      <button id="sticky-cta-btn" class="sticky-cta__btn" disabled>
+        Ajouter au panier
+      </button>
+    </div>
+  </div>
 
   <script type="module" src="js/app-option4.js"></script>
 </body>

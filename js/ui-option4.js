@@ -1,6 +1,7 @@
 // ============================================================
-// UI OPTION 4 - Page produit Recto Verso + CTAs pack intégrés
-// Modal configurateur dans le style de la marque
+// UI OPTION 4 - CRO Redesign
+// Inline configurator with tabs, live recap, sticky CTA
+// No modal — all configuration happens on page
 // ============================================================
 
 import { ZOOMS, COFFRETS, OFFERS, CONFIG } from './data.js';
@@ -25,6 +26,7 @@ import { createCartAdapter } from './adapters.js';
 
 let currentConfigurator = null;
 let cartAdapter = null;
+let selectedOfferCode = 'explorer'; // Pre-select Pack Explorer (highest CRO value)
 
 // ============================================================
 // INIT
@@ -32,256 +34,343 @@ let cartAdapter = null;
 
 export function initProductUI() {
   cartAdapter = createCartAdapter(CONFIG.cartAdapter);
-  renderPackCTAs();
+  renderPackTabs();
+  selectOffer(selectedOfferCode);
+  renderSocialProof();
   renderMockCartPanel();
 }
 
 // ============================================================
-// PACK CTA CARDS (embedded in product page)
+// PACK TABS (radio selector — replaces modal CTA cards)
 // ============================================================
 
-function renderPackCTAs() {
-  const container = document.getElementById('pack-cta-cards');
+function renderPackTabs() {
+  const container = document.getElementById('pack-tabs');
   if (!container) return;
 
   const offers = getCardOffers();
 
   container.innerHTML = offers.map((offer) => {
     const price = getCardDisplayPrice(offer);
+    const isSelected = offer.code === selectedOfferCode;
     const isPack = offer.packPrice !== null;
-    const isFeatured = offer.badge === 'Meilleure offre';
-    const isPopular = offer.badge === 'Populaire';
 
     let badgeHtml = '';
     if (offer.badge) {
-      const cls = isFeatured ? '' : 'pack-cta-card__badge--green';
-      badgeHtml = `<span class="pack-cta-card__badge ${cls}">${offer.badge}</span>`;
+      const cls = offer.badge === 'Meilleure offre' ? '' : 'pack-tab__badge--green';
+      badgeHtml = `<span class="pack-tab__badge ${cls}">${offer.badge}</span>`;
     }
 
-    // Icon based on content
-    let icon = '📖';
-    if (offer.zoomCount >= 2) icon = '📚';
-    if (offer.coffretCount > 0 && offer.zoomCount === 1) icon = '🎁';
-
     return `
-      <div class="pack-cta-card ${isFeatured ? 'pack-cta-card--featured' : ''}"
-           tabindex="0" role="button"
-           aria-label="Configurer ${offer.title}"
-           data-offer="${offer.code}">
+      <button class="pack-tab ${isSelected ? 'pack-tab--selected' : ''}"
+              role="radio" aria-checked="${isSelected}"
+              aria-label="${offer.title}"
+              data-offer="${offer.code}">
         ${badgeHtml}
-        <div class="pack-cta-card__icon">${icon}</div>
-        <div class="pack-cta-card__title">${offer.cardTitle}</div>
-        <div class="pack-cta-card__contents">${offer.cardSubtitle}</div>
-        <div class="pack-cta-card__pricing">
-          <span class="pack-cta-card__price">${isPack ? '' : 'Dès '}${formatPrice(price)}</span>
-          ${offer.originalPrice ? `<span class="pack-cta-card__original-price">${formatPrice(offer.originalPrice)}</span>` : ''}
+        <span class="pack-tab__title">${offer.cardTitle}</span>
+        <span class="pack-tab__subtitle">${offer.cardSubtitle}</span>
+        <div class="pack-tab__pricing">
+          ${offer.originalPrice ? `<span class="pack-tab__original-price">${formatPrice(offer.originalPrice)}</span>` : ''}
+          <span class="pack-tab__price">${isPack ? '' : 'Dès '}${formatPrice(price)}</span>
         </div>
-        ${offer.reductionText ? `<div class="pack-cta-card__reduction">${offer.reductionText}</div>` : '<div style="height:18px"></div>'}
-        <span class="pack-cta-card__cta-btn">Composer →</span>
-        <div class="pack-cta-card__shipping">Livraison : ${offer.expectedShipping === 0 ? 'offerte' : formatPrice(offer.expectedShipping)}</div>
-      </div>
+        ${offer.reductionText ? `<span class="pack-tab__savings">${offer.reductionText}</span>` : ''}
+      </button>
     `;
   }).join('');
 }
 
 // ============================================================
-// MODAL CONFIGURATOR
+// OFFER SELECTION (tab switching)
 // ============================================================
 
-function openModal(offerCode) {
+function selectOffer(offerCode) {
   const offer = OFFERS.find((o) => o.code === offerCode);
   if (!offer) return;
 
+  selectedOfferCode = offerCode;
   currentConfigurator = new PackConfigurator(offer);
+
   trackOfferCardClick(offerCode);
   trackConfigOpen(offerCode);
 
-  const overlay = document.getElementById('rv-modal-overlay');
-  const title = document.getElementById('rv-modal-title');
-  const body = document.getElementById('rv-modal-body');
-  const footer = document.getElementById('rv-modal-footer');
-
-  title.textContent = offer.title;
-  renderModalContent();
-
-  overlay.classList.add('is-open');
-  document.body.style.overflow = 'hidden';
-
-  // Focus trap
-  const modal = document.getElementById('rv-modal');
-  const firstFocusable = modal.querySelector('button, [tabindex]');
-  if (firstFocusable) firstFocusable.focus();
+  renderPackTabs();
+  renderInlineSelection();
+  renderInlineRecap();
+  updateCTAButton();
+  updateStickyCTA();
 }
 
-function closeModal() {
-  const overlay = document.getElementById('rv-modal-overlay');
-  overlay.classList.remove('is-open');
-  document.body.style.overflow = '';
-  currentConfigurator = null;
-}
+// ============================================================
+// INLINE PRODUCT SELECTION (zoom + coffret grids on page)
+// ============================================================
 
-function renderModalContent() {
-  if (!currentConfigurator) return;
+function renderInlineSelection() {
+  const container = document.getElementById('pack-selection');
+  if (!container || !currentConfigurator) return;
 
-  const body = document.getElementById('rv-modal-body');
-  const footer = document.getElementById('rv-modal-footer');
-  const step = currentConfigurator.currentStep;
-
-  let bodyHtml = '';
-  let footerHtml = '';
-
-  // Step indicator
-  bodyHtml += renderStepIndicator();
-
-  // Error container
-  bodyHtml += '<div class="config-error" id="config-error"></div>';
-
-  if (step === 'zoom') {
-    bodyHtml += renderZoomStep();
-    footerHtml = `
-      <button class="rv-btn rv-btn--primary" id="config-next"
-              ${currentConfigurator.allZoomsSelected() ? '' : 'disabled'}>
-        ${currentConfigurator.offer.coffretCount > 0 ? 'Choisir le coffret →' : 'Voir le récapitulatif →'}
-      </button>
-    `;
-  } else if (step === 'coffret') {
-    bodyHtml += renderCoffretStep();
-    footerHtml = `
-      <div class="rv-config-nav">
-        <button class="rv-btn rv-btn--text" id="config-prev">← Retour</button>
-        <button class="rv-btn rv-btn--primary" id="config-next"
-                ${currentConfigurator.selectedCoffret ? '' : 'disabled'}>
-          Récapitulatif →
-        </button>
-      </div>
-    `;
-  } else if (step === 'recap') {
-    bodyHtml += renderRecapStep();
-    footerHtml = `
-      <div class="rv-config-nav">
-        <button class="rv-btn rv-btn--text" id="config-prev">← Modifier</button>
-        <button class="rv-btn rv-btn--primary" id="config-add-to-cart">
-          Ajouter au panier
-        </button>
-      </div>
-    `;
-  }
-
-  body.innerHTML = bodyHtml;
-  footer.innerHTML = footerHtml;
-
-  bindModalEvents();
-}
-
-// --- Step indicator ---
-function renderStepIndicator() {
   const c = currentConfigurator;
-  const steps = [];
+  let html = '';
 
-  const zoomState = c.currentStep === 'zoom' ? 'is-active' : c.allZoomsSelected() ? 'is-done' : '';
-  steps.push({ label: c.offer.zoomCount > 1 ? 'Zooms' : 'Zoom', state: zoomState });
+  // Zoom section
+  const zoomsDone = c.allZoomsSelected();
+  const zoomsSelected = c.selectedZooms.filter((z) => z !== null).length;
 
-  if (c.offer.coffretCount > 0) {
-    const coffretState = c.currentStep === 'coffret' ? 'is-active' : c.selectedCoffret ? 'is-done' : '';
-    steps.push({ label: 'Coffret', state: coffretState });
-  }
-
-  const recapState = c.currentStep === 'recap' ? 'is-active' : '';
-  steps.push({ label: 'Récap', state: recapState });
-
-  let html = '<div class="step-indicator" role="navigation" aria-label="Étapes">';
-  steps.forEach((s, i) => {
-    if (i > 0) html += '<span class="step-indicator__separator"></span>';
-    html += `<div class="step-indicator__step ${s.state}">
-      <span class="step-indicator__number">${i + 1}</span>
-      <span>${s.label}</span>
-    </div>`;
-  });
-  html += '</div>';
-  return html;
-}
-
-// --- Zoom step ---
-function renderZoomStep() {
-  const c = currentConfigurator;
-  let html = '<div class="selector-section">';
-  html += `<h4 class="selector-section__title">Choisissez ${c.offer.zoomCount > 1 ? 'vos Zooms' : 'votre Zoom'}</h4>`;
-  html += `<p class="selector-section__hint">${c.offer.zoomCount} guide${c.offer.zoomCount > 1 ? 's' : ''} à sélectionner</p>`;
+  html += '<div class="pack-selection__section">';
+  html += `<h4 class="pack-selection__title">
+    Sélectionnez ${c.offer.zoomCount > 1 ? 'vos guides' : 'votre guide'}
+    <span class="pack-selection__counter ${zoomsDone ? 'pack-selection__counter--done' : ''}">${zoomsSelected}/${c.offer.zoomCount}</span>
+  </h4>`;
+  html += `<p class="pack-selection__hint">${c.offer.zoomCount} guide${c.offer.zoomCount > 1 ? 's' : ''} à sélectionner</p>`;
 
   for (let slot = 0; slot < c.offer.zoomCount; slot++) {
     if (c.offer.zoomCount > 1) {
-      html += `<p class="selector-section__slot-label">Zoom ${slot + 1}</p>`;
+      html += `<p class="pack-selection__slot-label">Guide ${slot + 1}</p>`;
     }
     html += '<div class="product-grid">';
     html += ZOOMS.map((z) => renderProductOption(z, c.selectedZooms[slot] === z.id, 'zoom', slot)).join('');
     html += '</div>';
   }
   html += '</div>';
-  return html;
+
+  // Coffret section
+  if (c.offer.coffretCount > 0) {
+    const coffretDone = c.selectedCoffret !== null;
+    html += '<div class="pack-selection__section">';
+    html += `<h4 class="pack-selection__title">
+      Sélectionnez votre coffret
+      <span class="pack-selection__counter ${coffretDone ? 'pack-selection__counter--done' : ''}">${coffretDone ? '1' : '0'}/1</span>
+    </h4>`;
+    html += '<p class="pack-selection__hint">1 coffret à sélectionner</p>';
+    html += '<div class="product-grid">';
+    html += COFFRETS.map((co) =>
+      renderProductOption(co, c.selectedCoffret === co.id, 'coffret', 0)
+    ).join('');
+    html += '</div></div>';
+  }
+
+  container.innerHTML = html;
+  bindInlineSelectionEvents();
 }
 
-// --- Coffret step ---
-function renderCoffretStep() {
-  let html = '<div class="selector-section">';
-  html += '<h4 class="selector-section__title">Choisissez votre Coffret</h4>';
-  html += '<p class="selector-section__hint">1 coffret à sélectionner</p>';
-  html += '<div class="product-grid">';
-  html += COFFRETS.map((c) =>
-    renderProductOption(c, currentConfigurator.selectedCoffret === c.id, 'coffret', 0)
-  ).join('');
-  html += '</div></div>';
-  return html;
-}
+// ============================================================
+// INLINE RECAP (live price summary with anchoring)
+// ============================================================
 
-// --- Recap step ---
-function renderRecapStep() {
-  const recap = currentConfigurator.getRecap();
-  const shipping = currentConfigurator.getShipping();
-  const price = currentConfigurator.getPrice();
-
-  let html = '<div class="rv-recap">';
-  html += `<p class="rv-recap__title">Votre ${recap.offer.packPrice ? 'pack' : 'sélection'}</p>`;
-  html += '<ul class="rv-recap__items">';
-
-  recap.zooms.forEach((z) => {
-    html += `<li class="rv-recap__item"><span class="rv-recap__item-icon">✓</span>${z.title}</li>`;
-  });
-
-  if (recap.coffret) {
-    html += `<li class="rv-recap__item"><span class="rv-recap__item-icon">✓</span>${recap.coffret.title}</li>`;
+function renderInlineRecap() {
+  const container = document.getElementById('pack-recap-inline');
+  if (!container || !currentConfigurator) {
+    if (container) container.innerHTML = '';
+    return;
   }
 
-  html += '</ul>';
-  html += '<div class="rv-recap__divider"></div>';
+  const c = currentConfigurator;
+  const price = c.getPrice();
+  const shipping = c.getShipping();
+  const hasSelections = c.selectedZooms.some((z) => z !== null) || c.selectedCoffret;
 
-  if (recap.originalPrice) {
-    html += `<div class="rv-recap__price-row">
-      <span class="rv-recap__price-label">Prix normal</span>
-      <span class="rv-recap__price-value--original">${formatPrice(recap.originalPrice)}</span>
-    </div>`;
+  if (!hasSelections) {
+    container.innerHTML = '';
+    return;
   }
 
-  html += `<div class="rv-recap__price-row">
-    <span class="rv-recap__price-label">Prix pack</span>
-    <span class="rv-recap__price-value">${formatPrice(price)}</span>
-  </div>`;
+  let html = '<div class="pack-recap-inline__card">';
 
-  html += `<div class="rv-recap__price-row">
-    <span class="rv-recap__price-label">Livraison</span>
-    <span class="rv-recap__price-value ${shipping.price === 0 ? 'rv-recap__price-value--free' : ''}">
-      ${shipping.price === 0 ? 'Offerte' : formatPrice(shipping.price)}
-    </span>
-  </div>`;
+  // Selected items as chips
+  const selectedZooms = c.selectedZooms
+    .map((id) => id ? getZoomById(id) : null)
+    .filter(Boolean);
 
-  if (recap.reductionText) {
-    html += `<p class="rv-recap__reduction">${recap.reductionText}</p>`;
+  if (selectedZooms.length > 0 || c.selectedCoffret) {
+    html += '<div class="pack-recap-inline__items">';
+    selectedZooms.forEach((z) => {
+      html += `<span class="pack-recap-inline__item">✓ ${z.title}</span>`;
+    });
+    if (c.selectedCoffret) {
+      const coffret = getCoffretById(c.selectedCoffret);
+      html += `<span class="pack-recap-inline__item">✓ ${coffret.title}</span>`;
+    }
+    html += '</div>';
   }
+
+  // Price anchoring
+  html += '<div class="pack-recap-inline__price-line">';
+  if (c.offer.originalPrice) {
+    html += `<span class="pack-recap-inline__original">${formatPrice(c.offer.originalPrice)}</span>`;
+    html += `<span class="pack-recap-inline__current">${formatPrice(price)}</span>`;
+    const savings = c.offer.originalPrice - price;
+    if (savings > 0) {
+      html += `<span class="pack-recap-inline__savings">-${formatPrice(savings)}</span>`;
+    }
+  } else {
+    html += `<span class="pack-recap-inline__current">${formatPrice(price)}</span>`;
+  }
+  html += '</div>';
+
+  // Shipping
+  const isFree = shipping.price === 0;
+  html += `<span class="pack-recap-inline__shipping ${isFree ? 'pack-recap-inline__shipping--free' : ''}">
+    Livraison : ${isFree ? 'offerte ✓' : formatPrice(shipping.price)}
+  </span>`;
 
   html += '</div>';
-  return html;
+  container.innerHTML = html;
 }
 
-// --- Product option ---
+// ============================================================
+// CTA BUTTON UPDATE (price in button)
+// ============================================================
+
+function updateCTAButton() {
+  const btn = document.getElementById('pack-add-to-cart');
+  if (!btn || !currentConfigurator) return;
+
+  const isComplete = currentConfigurator.isComplete();
+  const price = currentConfigurator.getPrice();
+
+  btn.disabled = !isComplete;
+
+  if (isComplete) {
+    btn.textContent = `Ajouter au panier — ${formatPrice(price)}`;
+  } else {
+    const c = currentConfigurator;
+    const zoomsLeft = c.selectedZooms.filter((z) => z === null).length;
+    const coffretLeft = c.offer.coffretCount > 0 && !c.selectedCoffret ? 1 : 0;
+
+    if (zoomsLeft > 0) {
+      btn.textContent = `Sélectionnez ${zoomsLeft} guide${zoomsLeft > 1 ? 's' : ''} pour continuer`;
+    } else if (coffretLeft > 0) {
+      btn.textContent = 'Sélectionnez un coffret pour continuer';
+    }
+  }
+}
+
+// ============================================================
+// STICKY CTA BAR
+// ============================================================
+
+function updateStickyCTA() {
+  const titleEl = document.getElementById('sticky-cta-title');
+  const priceEl = document.getElementById('sticky-cta-price');
+  const btn = document.getElementById('sticky-cta-btn');
+  if (!titleEl || !currentConfigurator) return;
+
+  titleEl.textContent = currentConfigurator.offer.title;
+  const price = currentConfigurator.getPrice();
+  priceEl.textContent = formatPrice(price);
+
+  const isComplete = currentConfigurator.isComplete();
+  btn.disabled = !isComplete;
+  btn.textContent = isComplete
+    ? `Ajouter au panier — ${formatPrice(price)}`
+    : 'Complétez votre sélection';
+}
+
+function initStickyObserver() {
+  const mainCTA = document.getElementById('pack-add-to-cart');
+  const stickyBar = document.getElementById('sticky-cta-bar');
+  if (!mainCTA || !stickyBar) return;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        stickyBar.classList.remove('is-visible');
+        stickyBar.setAttribute('aria-hidden', 'true');
+      } else {
+        stickyBar.classList.add('is-visible');
+        stickyBar.setAttribute('aria-hidden', 'false');
+      }
+    },
+    { threshold: 0, rootMargin: '0px' }
+  );
+  observer.observe(mainCTA);
+}
+
+// ============================================================
+// INLINE SELECTION EVENTS
+// ============================================================
+
+function bindInlineSelectionEvents() {
+  const container = document.getElementById('pack-selection');
+  if (!container) return;
+
+  container.querySelectorAll('.product-option').forEach((el) => {
+    el.addEventListener('click', handleProductSelectInline);
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleProductSelectInline(e);
+      }
+    });
+  });
+}
+
+function handleProductSelectInline(e) {
+  const option = e.target.closest('.product-option');
+  if (!option || !currentConfigurator) return;
+
+  const type = option.dataset.productType;
+  const id = option.dataset.productId;
+  const slot = parseInt(option.dataset.slot, 10);
+
+  if (type === 'zoom') {
+    currentConfigurator.selectZoom(slot, id);
+    trackZoomSelected(id, slot);
+  } else if (type === 'coffret') {
+    currentConfigurator.selectCoffret(id);
+    trackCoffretSelected(id);
+  }
+
+  renderInlineSelection();
+  renderInlineRecap();
+  updateCTAButton();
+  updateStickyCTA();
+}
+
+// ============================================================
+// ADD TO CART (shared by main CTA + sticky CTA)
+// ============================================================
+
+async function handleAddToCart() {
+  if (!currentConfigurator || !currentConfigurator.isComplete()) return;
+
+  const payload = currentConfigurator.getCartPayload();
+  const recap = currentConfigurator.getRecap();
+
+  trackAddToCart(currentConfigurator.offer.code, {
+    zooms: recap.zooms.map((z) => z.id),
+    coffret: recap.coffret?.id || null,
+  });
+
+  // Disable both CTAs
+  const mainBtn = document.getElementById('pack-add-to-cart');
+  const stickyBtn = document.getElementById('sticky-cta-btn');
+  if (mainBtn) { mainBtn.disabled = true; mainBtn.textContent = 'Ajout en cours…'; }
+  if (stickyBtn) { stickyBtn.disabled = true; stickyBtn.textContent = 'Ajout en cours…'; }
+
+  try {
+    const result = await cartAdapter.addToCart(payload);
+    if (result.ok) {
+      trackAddToCartSuccess(currentConfigurator.offer.code, payload);
+      showToast('Ajouté au panier !');
+      updateMockCartDisplay();
+      // Re-enable with price
+      updateCTAButton();
+      updateStickyCTA();
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (err) {
+    trackAddToCartError(currentConfigurator.offer.code, err);
+    showToast('Erreur lors de l\'ajout au panier', 'error');
+    updateCTAButton();
+    updateStickyCTA();
+  }
+}
+
+// ============================================================
+// PRODUCT OPTION (reused from original — unchanged)
+// ============================================================
+
 function renderProductOption(product, isSelected, type, slot) {
   return `
     <div class="product-option ${isSelected ? 'is-selected' : ''}"
@@ -299,86 +388,26 @@ function renderProductOption(product, isSelected, type, slot) {
 }
 
 // ============================================================
-// MODAL EVENT BINDING
+// SOCIAL PROOF (static review cards)
 // ============================================================
 
-function bindModalEvents() {
-  const body = document.getElementById('rv-modal-body');
-  const footer = document.getElementById('rv-modal-footer');
+function renderSocialProof() {
+  const container = document.getElementById('social-proof-reviews');
+  if (!container) return;
 
-  // Product options
-  body.querySelectorAll('.product-option').forEach((el) => {
-    el.addEventListener('click', handleProductSelect);
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleProductSelect(e); }
-    });
-  });
+  const reviews = [
+    { name: 'Marie L.', text: 'Carte magnifique et super bien pensée. Les itinéraires sont vraiment testés et approuvés, on sent le vécu !', stars: 5 },
+    { name: 'Thomas B.', text: 'Le Pack Explorer est le meilleur rapport qualité-prix. 2 Zooms + Coffret, tout ce qu\'il faut pour planifier ses vacances.', stars: 5 },
+    { name: 'Sophie R.', text: 'Offert à mon conjoint pour Noël, il a adoré. Les tracés GPS sont un vrai plus par rapport aux autres guides.', stars: 5 },
+  ];
 
-  // Next
-  const nextBtn = footer.querySelector('#config-next');
-  if (nextBtn) nextBtn.addEventListener('click', () => {
-    if (currentConfigurator.nextStep()) renderModalContent();
-  });
-
-  // Prev
-  const prevBtn = footer.querySelector('#config-prev');
-  if (prevBtn) prevBtn.addEventListener('click', () => {
-    if (currentConfigurator.prevStep()) renderModalContent();
-  });
-
-  // Add to cart
-  const addBtn = footer.querySelector('#config-add-to-cart');
-  if (addBtn) addBtn.addEventListener('click', handleAddToCart);
-}
-
-function handleProductSelect(e) {
-  const option = e.target.closest('.product-option');
-  if (!option || !currentConfigurator) return;
-
-  const type = option.dataset.productType;
-  const id = option.dataset.productId;
-  const slot = parseInt(option.dataset.slot, 10);
-
-  if (type === 'zoom') {
-    currentConfigurator.selectZoom(slot, id);
-    trackZoomSelected(id, slot);
-  } else if (type === 'coffret') {
-    currentConfigurator.selectCoffret(id);
-    trackCoffretSelected(id);
-  }
-
-  renderModalContent();
-}
-
-async function handleAddToCart() {
-  if (!currentConfigurator || !currentConfigurator.isComplete()) return;
-
-  const payload = currentConfigurator.getCartPayload();
-  const recap = currentConfigurator.getRecap();
-
-  trackAddToCart(currentConfigurator.offer.code, {
-    zooms: recap.zooms.map((z) => z.id),
-    coffret: recap.coffret?.id || null,
-  });
-
-  const btn = document.getElementById('config-add-to-cart');
-  if (btn) { btn.disabled = true; btn.textContent = 'Ajout en cours…'; }
-
-  try {
-    const result = await cartAdapter.addToCart(payload);
-    if (result.ok) {
-      trackAddToCartSuccess(currentConfigurator.offer.code, payload);
-      showToast('Ajouté au panier !');
-      closeModal();
-      updateMockCartDisplay();
-    } else {
-      throw new Error(result.error);
-    }
-  } catch (err) {
-    trackAddToCartError(currentConfigurator.offer.code, err);
-    showToast('Erreur lors de l\'ajout', 'error');
-    if (btn) { btn.disabled = false; btn.textContent = 'Ajouter au panier'; }
-  }
+  container.innerHTML = reviews.map((r) => `
+    <div class="social-proof__review">
+      <div class="social-proof__stars">${'★'.repeat(r.stars)}</div>
+      <p class="social-proof__review-text">"${r.text}"</p>
+      <span class="social-proof__reviewer">— ${r.name}</span>
+    </div>
+  `).join('');
 }
 
 // ============================================================
@@ -386,31 +415,36 @@ async function handleAddToCart() {
 // ============================================================
 
 export function bindProductEvents() {
-  // Pack CTA card clicks
-  document.getElementById('pack-cta-cards')?.addEventListener('click', (e) => {
-    const card = e.target.closest('.pack-cta-card');
-    if (!card) return;
-    openModal(card.dataset.offer);
+  // Tab clicks (event delegation)
+  document.getElementById('pack-tabs')?.addEventListener('click', (e) => {
+    const tab = e.target.closest('.pack-tab');
+    if (!tab) return;
+    const code = tab.dataset.offer;
+    if (code && code !== selectedOfferCode) {
+      selectOffer(code);
+    }
   });
 
-  document.getElementById('pack-cta-cards')?.addEventListener('keydown', (e) => {
+  // Tab keyboard
+  document.getElementById('pack-tabs')?.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = e.target.closest('.pack-cta-card');
-    if (!card) return;
+    const tab = e.target.closest('.pack-tab');
+    if (!tab) return;
     e.preventDefault();
-    openModal(card.dataset.offer);
+    const code = tab.dataset.offer;
+    if (code && code !== selectedOfferCode) {
+      selectOffer(code);
+    }
   });
 
-  // Modal close
-  document.getElementById('rv-modal-close')?.addEventListener('click', closeModal);
-  document.getElementById('rv-modal-overlay')?.addEventListener('click', (e) => {
-    if (e.target === e.currentTarget) closeModal();
-  });
+  // Main CTA
+  document.getElementById('pack-add-to-cart')?.addEventListener('click', handleAddToCart);
 
-  // ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
+  // Sticky CTA button
+  document.getElementById('sticky-cta-btn')?.addEventListener('click', handleAddToCart);
+
+  // Init sticky bar observer
+  initStickyObserver();
 }
 
 // ============================================================
@@ -428,7 +462,7 @@ function showToast(message, type = 'success') {
   setTimeout(() => {
     toast.classList.remove('is-visible');
     setTimeout(() => toast.remove(), 300);
-  }, 2500);
+  }, 3500);
 }
 
 // ============================================================
