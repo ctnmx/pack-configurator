@@ -21,7 +21,13 @@
     </div>
   </nav>
 
-  <!-- SITE HEADER (simulated Recto Verso) -->
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="announcement-bar">
+    <span class="announcement-bar__icon">🚚</span>
+    Livraison offerte dès 75 € · Expédition sous 48h
+  </div>
+
+  <!-- SITE HEADER -->
   <header class="rv-header">
     <a href="#" class="rv-header__logo">
       <span>recto</span>
@@ -39,6 +45,15 @@
     </div>
   </header>
 
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="#">Accueil</a>
+    <span class="breadcrumb__sep">/</span>
+    <a href="#">Guides vélo</a>
+    <span class="breadcrumb__sep">/</span>
+    <span class="breadcrumb__current">Recto Verso Vélo France</span>
+  </div>
+
   <!-- PRODUCT HERO -->
   <div class="product-hero">
     <!-- Images -->
@@ -46,6 +61,7 @@
       <div class="product-images__main">
         <img src="https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&h=700&fit=crop"
              alt="Recto Verso Vélo France" />
+        <span class="product-images__badge">Bestseller</span>
       </div>
       <div class="product-images__thumbs">
         <div class="product-images__thumb is-active">
@@ -61,19 +77,27 @@
           <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=100&h=100&fit=crop" alt="" />
         </div>
       </div>
+      <!-- Mobile dot indicators -->
+      <div class="product-images__dots">
+        <span class="product-images__dot is-active"></span>
+        <span class="product-images__dot"></span>
+        <span class="product-images__dot"></span>
+        <span class="product-images__dot"></span>
+      </div>
     </div>
 
     <!-- Product Info -->
     <div class="product-info">
-      <h1 class="product-info__title">Recto Verso<br>Vélo France</h1>
-
       <div class="product-info__rating">
         <div class="product-info__stars">★★★★★</div>
         <span class="product-info__reviews">259 avis</span>
+        <span class="product-info__verified">Achats vérifiés</span>
       </div>
 
+      <h1 class="product-info__title">Recto Verso<br>Vélo France</h1>
+
       <p class="product-info__desc">
-        La carte-méthode pour organiser 100 échappées vélo en France :
+        La carte-méthode pour organiser 100 échappées vélo en France.
       </p>
 
       <ul class="product-info__features">
@@ -84,18 +108,25 @@
         <li>Tracés GPS téléchargeables inclus</li>
       </ul>
 
-      <div class="product-info__price">40,00 €</div>
-
-      <p class="product-info__shipping-promo">
-        🚚 Livraison dès 1,90 € · Gratuite dès 75 €
-      </p>
+      <div class="product-info__price-block">
+        <span class="product-info__price">40,00 €</span>
+        <span class="product-info__price-note">ou en pack dès 55 €</span>
+      </div>
 
       <!-- INLINE PACK CONFIGURATOR -->
       <div id="pack-configurator-inline" class="pack-inline">
-        <h3 class="pack-inline__heading">Choisissez votre formule</h3>
+        <div class="pack-inline__header">
+          <h3 class="pack-inline__heading">Composez votre pack</h3>
+          <span class="pack-inline__save-hint">Économisez jusqu'à 15%</span>
+        </div>
 
-        <!-- Tab selector: 3 radio-style cards -->
+        <!-- Tab selector -->
         <div id="pack-tabs" class="pack-tabs" role="radiogroup" aria-label="Formule">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Selection progress bar -->
+        <div id="pack-progress" class="pack-progress">
           <!-- Rendered by JS -->
         </div>
 
@@ -113,6 +144,13 @@
         <button id="pack-add-to-cart" class="pack-inline__cta" disabled>
           Ajouter au panier
         </button>
+
+        <!-- Inline trust signals near CTA -->
+        <div class="pack-inline__trust">
+          <span class="pack-inline__trust-item">🔒 Paiement sécurisé</span>
+          <span class="pack-inline__trust-item">↩️ Retour 30j gratuit</span>
+          <span class="pack-inline__trust-item">🚚 Expédié sous 48h</span>
+        </div>
       </div>
     </div>
   </div>
@@ -120,30 +158,55 @@
   <!-- USP BAR -->
   <div class="usp-bar">
     <div class="usp-bar__item">
-      <span class="usp-bar__icon-text">SAV</span>
-      <span class="usp-bar__text">Service client<br>réactif</span>
+      <div class="usp-bar__icon">
+        <span class="usp-bar__icon-text">SAV</span>
+      </div>
+      <div class="usp-bar__content">
+        <strong>Service client réactif</strong>
+        <span>Réponse sous 24h</span>
+      </div>
     </div>
     <div class="usp-bar__item">
-      <span class="usp-bar__icon-text">PRO</span>
-      <span class="usp-bar__text">Testés par des<br>aventuriers</span>
+      <div class="usp-bar__icon">
+        <span class="usp-bar__icon-text">PRO</span>
+      </div>
+      <div class="usp-bar__content">
+        <strong>Testés par des aventuriers</strong>
+        <span>100% terrain</span>
+      </div>
     </div>
     <div class="usp-bar__item">
-      <span class="usp-bar__icon-text">10K+</span>
-      <span class="usp-bar__text">Clients<br>satisfaits</span>
+      <div class="usp-bar__icon">
+        <span class="usp-bar__icon-text">10K+</span>
+      </div>
+      <div class="usp-bar__content">
+        <strong>Clients satisfaits</strong>
+        <span>Note 4.8/5</span>
+      </div>
     </div>
     <div class="usp-bar__item">
-      <span class="usp-bar__icon-text">48h</span>
-      <span class="usp-bar__text">Expédition<br>rapide</span>
+      <div class="usp-bar__icon">
+        <span class="usp-bar__icon-text">48h</span>
+      </div>
+      <div class="usp-bar__content">
+        <strong>Expédition rapide</strong>
+        <span>Colissimo suivi</span>
+      </div>
     </div>
   </div>
 
   <!-- SOCIAL PROOF -->
   <section class="social-proof" aria-label="Avis clients">
     <div class="social-proof__inner">
-      <h2 class="social-proof__title">Ils nous font confiance</h2>
-      <div class="social-proof__stat">
-        <span class="social-proof__number">10 000+</span>
-        <span class="social-proof__label">aventuriers équipés</span>
+      <div class="social-proof__header">
+        <h2 class="social-proof__title">Ce qu'en pensent nos clients</h2>
+        <div class="social-proof__summary">
+          <div class="social-proof__score">4.8<span>/5</span></div>
+          <div class="social-proof__score-detail">
+            <div class="social-proof__stars-large">★★★★★</div>
+            <span>Basé sur 259 avis vérifiés</span>
+          </div>
+        </div>
       </div>
       <div id="social-proof-reviews" class="social-proof__reviews">
         <!-- Rendered by JS -->
@@ -187,16 +250,24 @@
   <!-- TOAST -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <!-- STICKY CTA BAR -->
+  <!-- STICKY CTA BAR (always visible on mobile, on scroll on desktop) -->
   <div id="sticky-cta-bar" class="sticky-cta" aria-hidden="true">
     <div class="sticky-cta__inner">
       <div class="sticky-cta__info">
         <span id="sticky-cta-title" class="sticky-cta__title">Pack Explorer</span>
-        <span id="sticky-cta-price" class="sticky-cta__price">68,00 €</span>
+        <div class="sticky-cta__price-row">
+          <span id="sticky-cta-original" class="sticky-cta__original"></span>
+          <span id="sticky-cta-price" class="sticky-cta__price">68,00 €</span>
+          <span id="sticky-cta-savings" class="sticky-cta__savings"></span>
+        </div>
       </div>
       <button id="sticky-cta-btn" class="sticky-cta__btn" disabled>
         Ajouter au panier
       </button>
+    </div>
+    <!-- Progress indicator inside sticky bar -->
+    <div id="sticky-cta-progress" class="sticky-cta__progress">
+      <div id="sticky-cta-progress-bar" class="sticky-cta__progress-bar" style="width: 0%"></div>
     </div>
   </div>
 
