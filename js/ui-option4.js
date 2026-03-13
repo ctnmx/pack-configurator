@@ -1,7 +1,7 @@
 // ============================================================
-// UI OPTION 4 - CRO Redesign
-// Inline configurator with tabs, live recap, sticky CTA
-// No modal — all configuration happens on page
+// UI OPTION 4 - CRO Redesign v2
+// Mobile-first inline configurator with progress bar,
+// enhanced sticky CTA, trust signals, urgency elements
 // ============================================================
 
 import { ZOOMS, COFFRETS, OFFERS, CONFIG } from './data.js';
@@ -41,7 +41,7 @@ export function initProductUI() {
 }
 
 // ============================================================
-// PACK TABS (radio selector — replaces modal CTA cards)
+// PACK TABS (radio-style list — mobile-first)
 // ============================================================
 
 function renderPackTabs() {
@@ -66,9 +66,14 @@ function renderPackTabs() {
               role="radio" aria-checked="${isSelected}"
               aria-label="${offer.title}"
               data-offer="${offer.code}">
-        ${badgeHtml}
-        <span class="pack-tab__title">${offer.cardTitle}</span>
-        <span class="pack-tab__subtitle">${offer.cardSubtitle}</span>
+        <span class="pack-tab__radio"><span class="pack-tab__radio-dot"></span></span>
+        <span class="pack-tab__content">
+          <span class="pack-tab__top-row">
+            <span class="pack-tab__title">${offer.cardTitle}</span>
+            ${badgeHtml}
+          </span>
+          <span class="pack-tab__subtitle">${offer.cardSubtitle}</span>
+        </span>
         <div class="pack-tab__pricing">
           ${offer.originalPrice ? `<span class="pack-tab__original-price">${formatPrice(offer.originalPrice)}</span>` : ''}
           <span class="pack-tab__price">${isPack ? '' : 'Dès '}${formatPrice(price)}</span>
@@ -94,10 +99,44 @@ function selectOffer(offerCode) {
   trackConfigOpen(offerCode);
 
   renderPackTabs();
+  renderProgressBar();
   renderInlineSelection();
   renderInlineRecap();
   updateCTAButton();
   updateStickyCTA();
+}
+
+// ============================================================
+// PROGRESS BAR (visual completion indicator)
+// ============================================================
+
+function getProgress() {
+  if (!currentConfigurator) return { percent: 0, done: 0, total: 0 };
+  const c = currentConfigurator;
+  const zoomsSelected = c.selectedZooms.filter((z) => z !== null).length;
+  const coffretSelected = c.selectedCoffret !== null ? 1 : 0;
+  const total = c.offer.zoomCount + c.offer.coffretCount;
+  const done = zoomsSelected + coffretSelected;
+  const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+  return { percent, done, total };
+}
+
+function renderProgressBar() {
+  const container = document.getElementById('pack-progress');
+  if (!container || !currentConfigurator) return;
+
+  const { percent, done, total } = getProgress();
+  const isDone = percent === 100;
+
+  container.innerHTML = `
+    <div class="pack-progress__bar">
+      <div class="pack-progress__fill" style="width: ${percent}%"></div>
+    </div>
+    <div class="pack-progress__text ${isDone ? 'pack-progress__text--done' : ''}">
+      <span>${isDone ? 'Sélection complète ✓' : `${done}/${total} sélectionné${done > 1 ? 's' : ''}`}</span>
+      <span>${percent}%</span>
+    </div>
+  `;
 }
 
 // ============================================================
@@ -245,23 +284,47 @@ function updateCTAButton() {
 }
 
 // ============================================================
-// STICKY CTA BAR
+// STICKY CTA BAR (with progress + savings)
 // ============================================================
 
 function updateStickyCTA() {
   const titleEl = document.getElementById('sticky-cta-title');
   const priceEl = document.getElementById('sticky-cta-price');
+  const originalEl = document.getElementById('sticky-cta-original');
+  const savingsEl = document.getElementById('sticky-cta-savings');
   const btn = document.getElementById('sticky-cta-btn');
+  const progressBar = document.getElementById('sticky-cta-progress-bar');
   if (!titleEl || !currentConfigurator) return;
 
-  titleEl.textContent = currentConfigurator.offer.title;
-  const price = currentConfigurator.getPrice();
+  const c = currentConfigurator;
+  titleEl.textContent = c.offer.title;
+  const price = c.getPrice();
   priceEl.textContent = formatPrice(price);
 
-  const isComplete = currentConfigurator.isComplete();
+  // Show original price + savings in sticky bar
+  if (originalEl && c.offer.originalPrice) {
+    originalEl.textContent = formatPrice(c.offer.originalPrice);
+    const savings = c.offer.originalPrice - price;
+    if (savingsEl && savings > 0) {
+      savingsEl.textContent = `-${formatPrice(savings)}`;
+    } else if (savingsEl) {
+      savingsEl.textContent = '';
+    }
+  } else if (originalEl) {
+    originalEl.textContent = '';
+    if (savingsEl) savingsEl.textContent = '';
+  }
+
+  // Update progress bar in sticky CTA
+  const { percent } = getProgress();
+  if (progressBar) {
+    progressBar.style.width = `${percent}%`;
+  }
+
+  const isComplete = c.isComplete();
   btn.disabled = !isComplete;
   btn.textContent = isComplete
-    ? `Ajouter au panier — ${formatPrice(price)}`
+    ? `Ajouter — ${formatPrice(price)}`
     : 'Complétez votre sélection';
 }
 
@@ -322,6 +385,7 @@ function handleProductSelectInline(e) {
 
   renderInlineSelection();
   renderInlineRecap();
+  renderProgressBar();
   updateCTAButton();
   updateStickyCTA();
 }
@@ -368,7 +432,7 @@ async function handleAddToCart() {
 }
 
 // ============================================================
-// PRODUCT OPTION (reused from original — unchanged)
+// PRODUCT OPTION
 // ============================================================
 
 function renderProductOption(product, isSelected, type, slot) {
@@ -388,7 +452,7 @@ function renderProductOption(product, isSelected, type, slot) {
 }
 
 // ============================================================
-// SOCIAL PROOF (static review cards)
+// SOCIAL PROOF (enhanced review cards)
 // ============================================================
 
 function renderSocialProof() {
@@ -396,16 +460,16 @@ function renderSocialProof() {
   if (!container) return;
 
   const reviews = [
-    { name: 'Marie L.', text: 'Carte magnifique et super bien pensée. Les itinéraires sont vraiment testés et approuvés, on sent le vécu !', stars: 5 },
-    { name: 'Thomas B.', text: 'Le Pack Explorer est le meilleur rapport qualité-prix. 2 Zooms + Coffret, tout ce qu\'il faut pour planifier ses vacances.', stars: 5 },
-    { name: 'Sophie R.', text: 'Offert à mon conjoint pour Noël, il a adoré. Les tracés GPS sont un vrai plus par rapport aux autres guides.', stars: 5 },
+    { name: 'Marie L.', text: 'Carte magnifique et super bien pensée. Les itinéraires sont vraiment testés et approuvés, on sent le vécu !', stars: 5, date: 'il y a 3 jours' },
+    { name: 'Thomas B.', text: 'Le Pack Explorer est le meilleur rapport qualité-prix. 2 Zooms + Coffret, tout ce qu\'il faut pour planifier ses vacances.', stars: 5, date: 'il y a 1 semaine' },
+    { name: 'Sophie R.', text: 'Offert à mon conjoint pour Noël, il a adoré. Les tracés GPS sont un vrai plus par rapport aux autres guides.', stars: 5, date: 'il y a 2 semaines' },
   ];
 
   container.innerHTML = reviews.map((r) => `
     <div class="social-proof__review">
       <div class="social-proof__stars">${'★'.repeat(r.stars)}</div>
       <p class="social-proof__review-text">"${r.text}"</p>
-      <span class="social-proof__reviewer">— ${r.name}</span>
+      <span class="social-proof__reviewer">— ${r.name} · ${r.date}</span>
     </div>
   `).join('');
 }
