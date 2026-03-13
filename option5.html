@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recto Verso Vélo France — Guided Flow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/option5.css" />
+</head>
+<body class="page-guided">
+
+  <!-- SHARED NAV -->
+  <nav class="options-nav" aria-label="Options d'affichage">
+    <div class="options-nav__inner">
+      <span class="options-nav__label">Aperçu UX :</span>
+      <a href="index.html" class="options-nav__link">Option 1 — Drawer</a>
+      <a href="option2.html" class="options-nav__link">Option 2 — Builder</a>
+      <a href="option3.html" class="options-nav__link">Option 3 — Tableau</a>
+      <a href="option4.html" class="options-nav__link">Option 4 — Produit</a>
+      <a href="option5.html" class="options-nav__link is-active">Option 5 — Guided</a>
+    </div>
+  </nav>
+
+  <!-- SITE HEADER -->
+  <header class="sh-header">
+    <a href="#" class="sh-header__logo">recto verso</a>
+    <nav class="sh-header__nav" aria-label="Navigation principale">
+      <a href="#" class="sh-header__nav-link">Boutique</a>
+      <a href="#" class="sh-header__nav-link">Guides</a>
+      <a href="#" class="sh-header__nav-link">Manifeste</a>
+    </nav>
+    <div class="sh-header__actions">
+      <button class="sh-btn sh-btn--ghost sh-btn--icon" aria-label="Compte">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+      <button class="sh-btn sh-btn--ghost sh-btn--icon sh-header__cart-btn" aria-label="Panier">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="sh-header__cart-count">2</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PRODUCT LAYOUT -->
+  <main class="sh-product">
+    <!-- LEFT: Images -->
+    <div class="sh-product__images">
+      <div class="sh-product__image-main sh-card">
+        <img src="https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&h=700&fit=crop"
+             alt="Recto Verso Vélo France" />
+        <div class="sh-badge sh-badge--destructive sh-product__image-badge">Bestseller</div>
+      </div>
+      <div class="sh-product__image-thumbs">
+        <button class="sh-product__thumb is-active">
+          <img src="https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=100&h=100&fit=crop" alt="" />
+        </button>
+        <button class="sh-product__thumb">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="" />
+        </button>
+        <button class="sh-product__thumb">
+          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&h=100&fit=crop" alt="" />
+        </button>
+        <button class="sh-product__thumb">
+          <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=100&h=100&fit=crop" alt="" />
+        </button>
+      </div>
+      <!-- Mobile dots -->
+      <div class="sh-product__dots">
+        <span class="sh-product__dot is-active"></span>
+        <span class="sh-product__dot"></span>
+        <span class="sh-product__dot"></span>
+        <span class="sh-product__dot"></span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Product info + configurator -->
+    <div class="sh-product__info">
+      <!-- Breadcrumb -->
+      <nav class="sh-breadcrumb" aria-label="Fil d'ariane">
+        <a href="#">Accueil</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="#">Guides vélo</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Vélo France</span>
+      </nav>
+
+      <!-- Rating -->
+      <div class="sh-rating">
+        <div class="sh-rating__stars">★★★★★</div>
+        <span class="sh-rating__count">259 avis</span>
+        <span class="sh-separator">·</span>
+        <span class="sh-badge sh-badge--secondary">Achats vérifiés</span>
+      </div>
+
+      <h1 class="sh-product__title">Recto Verso Vélo France</h1>
+
+      <p class="sh-product__desc">
+        La carte-méthode pour organiser 100 échappées vélo en France.
+        100 itinéraires testés, tracés GPS inclus, tous niveaux.
+      </p>
+
+      <!-- Price -->
+      <div class="sh-product__price-block">
+        <span class="sh-product__price">40,00 €</span>
+        <span class="sh-badge sh-badge--outline">ou en pack dès 55 €</span>
+      </div>
+
+      <div class="sh-separator-line"></div>
+
+      <!-- === GUIDED CONFIGURATOR (Accordion stepper) === -->
+      <div id="guided-configurator" class="sh-accordion">
+
+        <!-- Step 1: Choose formula -->
+        <div id="step-formula" class="sh-accordion__item is-open" data-step="formula">
+          <button class="sh-accordion__trigger" aria-expanded="true">
+            <div class="sh-accordion__step-badge">1</div>
+            <div class="sh-accordion__trigger-text">
+              <span class="sh-accordion__trigger-title">Choisissez votre formule</span>
+              <span id="step-formula-summary" class="sh-accordion__trigger-summary"></span>
+            </div>
+            <svg class="sh-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sh-accordion__content">
+            <div id="formula-cards" class="sh-formula-cards">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Choose guides -->
+        <div id="step-guides" class="sh-accordion__item" data-step="guides">
+          <button class="sh-accordion__trigger" aria-expanded="false" disabled>
+            <div class="sh-accordion__step-badge">2</div>
+            <div class="sh-accordion__trigger-text">
+              <span class="sh-accordion__trigger-title">Sélectionnez vos guides</span>
+              <span id="step-guides-summary" class="sh-accordion__trigger-summary"></span>
+            </div>
+            <svg class="sh-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sh-accordion__content">
+            <div id="guides-selection" class="sh-selection">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Choose coffret (conditional) -->
+        <div id="step-coffret" class="sh-accordion__item" data-step="coffret" style="display: none;">
+          <button class="sh-accordion__trigger" aria-expanded="false" disabled>
+            <div class="sh-accordion__step-badge">3</div>
+            <div class="sh-accordion__trigger-text">
+              <span class="sh-accordion__trigger-title">Sélectionnez votre coffret</span>
+              <span id="step-coffret-summary" class="sh-accordion__trigger-summary"></span>
+            </div>
+            <svg class="sh-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sh-accordion__content">
+            <div id="coffret-selection" class="sh-selection">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recap card -->
+      <div id="guided-recap" class="sh-recap-card sh-card" style="display: none;">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Primary CTA -->
+      <button id="guided-add-to-cart" class="sh-btn sh-btn--default sh-btn--lg sh-cta-main" disabled>
+        Ajouter au panier
+      </button>
+
+      <!-- Trust row -->
+      <div class="sh-trust-row">
+        <div class="sh-trust-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Paiement sécurisé</span>
+        </div>
+        <div class="sh-trust-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          <span>Retour 30j gratuit</span>
+        </div>
+        <div class="sh-trust-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>Expédié sous 48h</span>
+        </div>
+      </div>
+
+      <div class="sh-separator-line"></div>
+
+      <!-- Features (collapsible) -->
+      <details class="sh-details">
+        <summary class="sh-details__summary">
+          Détails du produit
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <ul class="sh-details__list">
+          <li>100 itinéraires testés et validés par des cyclistes</li>
+          <li>De 2 à 25 jours — du week-end express au grand voyage</li>
+          <li>Tous niveaux : débutant, intermédiaire, expert</li>
+          <li>100% accessible en train — zéro voiture, zéro avion</li>
+          <li>Tracés GPS téléchargeables inclus</li>
+        </ul>
+      </details>
+
+      <details class="sh-details">
+        <summary class="sh-details__summary">
+          Livraison & retours
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="sh-details__content">
+          <p>Livraison Colissimo suivi dès 1,90 €. Gratuite dès 75 € d'achat.</p>
+          <p>Retour gratuit sous 30 jours, satisfait ou remboursé.</p>
+        </div>
+      </details>
+    </div>
+  </main>
+
+  <!-- Social proof -->
+  <section class="sh-reviews" aria-label="Avis clients">
+    <div class="sh-reviews__inner">
+      <div class="sh-reviews__header">
+        <h2 class="sh-reviews__title">Avis clients</h2>
+        <div class="sh-reviews__aggregate">
+          <span class="sh-reviews__score">4.8</span>
+          <div>
+            <div class="sh-reviews__stars">★★★★★</div>
+            <span class="sh-reviews__count-text">259 avis vérifiés</span>
+          </div>
+        </div>
+      </div>
+      <div id="reviews-container" class="sh-reviews__grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Guarantees -->
+  <section class="sh-guarantees">
+    <div class="sh-guarantees__inner">
+      <div class="sh-guarantees__item sh-card">
+        <div class="sh-guarantees__icon">30j</div>
+        <strong>Satisfait ou remboursé</strong>
+        <span>Retour gratuit sous 30 jours</span>
+      </div>
+      <div class="sh-guarantees__item sh-card">
+        <div class="sh-guarantees__icon">SSL</div>
+        <strong>Paiement sécurisé</strong>
+        <span>CB, PayPal, Apple Pay</span>
+      </div>
+      <div class="sh-guarantees__item sh-card">
+        <div class="sh-guarantees__icon">FR</div>
+        <strong>Fabriqué en France</strong>
+        <span>Conception & impression locales</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mock cart -->
+  <section id="mock-cart" class="mock-cart" aria-label="Panier de test"></section>
+
+  <!-- Toast -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- STICKY CTA BAR -->
+  <div id="sticky-cta-bar" class="sh-sticky-cta" aria-hidden="true">
+    <div class="sh-sticky-cta__inner">
+      <div class="sh-sticky-cta__info">
+        <span id="sticky-title" class="sh-sticky-cta__name">Pack Explorer</span>
+        <div class="sh-sticky-cta__prices">
+          <span id="sticky-original" class="sh-sticky-cta__original"></span>
+          <span id="sticky-price" class="sh-sticky-cta__price">68,00 €</span>
+        </div>
+      </div>
+      <button id="sticky-btn" class="sh-btn sh-btn--default sh-sticky-cta__btn" disabled>
+        Ajouter au panier
+      </button>
+    </div>
+  </div>
+
+  <script type="module" src="js/app-option5.js"></script>
+</body>
+</html>
